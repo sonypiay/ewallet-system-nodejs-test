@@ -37,9 +37,3 @@ Connection.$on('error', (e) => {
 Connection.$on('warn', (e) => {
     logger.error(e);
 })
-
-const getAll = await Connection.users.findMany({
-    orderBy: {
-        created_at: 'desc'
-    }
-});
