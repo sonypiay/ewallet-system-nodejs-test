@@ -1,7 +1,7 @@
 import express from "express";
-import { Router } from "../routes/router.js";
+import { Router } from "../routes/Routes.js";
 
-export const application = express();
+export const Application = express();
 
-application.use(express.json());
-application.use(Router);
+Application.use(express.json());
+Application.use(Router);

@@ -1,6 +1,6 @@
 import winston from "winston";
 
-export const logger = winston.createLogger({
+export const Logger = winston.createLogger({
     transports: [
         new winston.transports.Console({}),
         new winston.transports.File({

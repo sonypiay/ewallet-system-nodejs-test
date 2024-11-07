@@ -1,5 +1,5 @@
 import express from "express";
-import { TransactionController } from "../controller/transactions-controller.js";
+import { TransactionController } from "../controller/TransactionsController.js";
 
 const routes = {
     credit: {

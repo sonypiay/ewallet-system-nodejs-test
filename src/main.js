@@ -1,9 +1,9 @@
-import { application } from "./application/app.js";
-import { logger } from "./application/logging.js";
+import { Application } from "./application/App.js";
+import { Logger } from "./application/Logging.js";
 
 const port = 3000;
 
-application.listen(port, () => {
-    logger.info("App started");
-    logger.info(`Running on port ${port}`);
+Application.listen(port, () => {
+    Logger.info("App started");
+    Logger.info(`Running on port ${port}`);
 });
