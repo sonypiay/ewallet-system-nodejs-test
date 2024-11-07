@@ -5,7 +5,7 @@ import TransactionRequest from "../validation/TransactionRequest.js";
 
 export const TransactionsService = {};
 
-const maximumDeposit = 5000;
+const maximumDeposit = 10000000;
 
 TransactionsService.credit = async (request) => {
     const storeRequest = TransactionRequest.storeRequest(request.body);
@@ -14,7 +14,7 @@ TransactionsService.credit = async (request) => {
         const userId = storeRequest.user_id;
         const amount = parseFloat(storeRequest.amount);
 
-        if( amount == 0 ) throw new BadRequestException("Invalid amount");
+        if( amount == 0 ) throw new BadRequestException("Transaksi gagal. Silakan isi saldo dengan benar");
 
         const getUsers = await tx.users.findUnique({
             select: {
@@ -76,7 +76,7 @@ TransactionsService.debit = async (request) => {
         const userId = storeRequest.user_id;
         let amount = parseFloat(storeRequest.amount);
 
-        if( amount == 0 ) throw new BadRequestException("Invalid amount");
+        if( amount == 0 ) throw new BadRequestException("Transaksi gagal. Silakan isi dana dengan benar");
         if( amount > 0 ) amount = amount * -1;
 
         const getUsers = await tx.users.findUnique({
