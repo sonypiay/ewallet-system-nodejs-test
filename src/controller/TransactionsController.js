@@ -5,7 +5,7 @@ export const TransactionController = {};
 TransactionController.credit = async (request, response, next) => {
     try {
         const result = await TransactionsService.credit(request);
-        return response.status(200).json(result);
+        return response.status(result.statusCode).json(result.response);
     } catch (error) {
         next(error);
     }
@@ -14,7 +14,7 @@ TransactionController.credit = async (request, response, next) => {
 TransactionController.debit = async (request, response, next) => {
     try {
         const result = await TransactionsService.debit(request);
-        return response.status(200).json(result);
+        return response.status(result.statusCode).json(result.response);
     } catch (error) {
         next(error);
     }
