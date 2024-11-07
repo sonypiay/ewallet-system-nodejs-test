@@ -1,0 +1,35 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id           Int            @id @default(autoincrement())
+  username     String         @unique @db.VarChar(50)
+  balance      Decimal        @default(0) @db.Decimal(15, 2)
+  created_at   DateTime       @default(now())
+  transactions Transactions[]
+
+  @@map("users")
+}
+
+model Transactions {
+  id         Int              @id @default(autoincrement())
+  user_id    Int
+  amount     Decimal          @default(0) @db.Decimal(15, 2)
+  type       TransactionsType @default(debit)
+  created_at DateTime         @default(now())
+  users      Users            @relation(fields: [user_id], references: [id])
+
+  @@map("transactions")
+}
+
+enum TransactionsType {
+  credit
+  debit
+}
