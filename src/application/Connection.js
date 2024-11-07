@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Logger } from "./Logging.js";
 
-export const Connection = new PrismaClient({
+export const ConnectionPrisma = new PrismaClient({
     log: [
         {
             level: 'query',
@@ -22,18 +22,18 @@ export const Connection = new PrismaClient({
     ]
 });
 
-Connection.$on('query', (e) => {
-    Logger.debug(e);
-})
-
-Connection.$on('info', (e) => {
+ConnectionPrisma.$on('query', (e) => {
     Logger.info(e);
 })
 
-Connection.$on('error', (e) => {
+ConnectionPrisma.$on('info', (e) => {
+    Logger.info(e);
+})
+
+ConnectionPrisma.$on('error', (e) => {
     Logger.error(e);
 })
 
-Connection.$on('warn', (e) => {
+ConnectionPrisma.$on('warn', (e) => {
     Logger.error(e);
 })
