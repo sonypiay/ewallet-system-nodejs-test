@@ -16,31 +16,17 @@ TransactionsService.credit = async (request) => {
 
         if( amount == 0 ) throw new BadRequestException("Transaksi gagal. Silakan isi saldo dengan benar");
 
-        const getUsers = await tx.users.findUnique({
-            select: {
-                balance: true
-            },
-            where: {
-                id: userId
-            }
-        });
+        const getUsers = await tx.$queryRaw`SELECT id, balance FROM users WHERE id = ${userId} FOR UPDATE`;
 
-        if( getUsers === null ) throw new NotFoundException("Transaksi gagal. User tidak ditemukan");
+        if( getUsers.length === 0 ) throw new NotFoundException("Transaksi gagal. User tidak ditemukan");
 
-        const currentBalance = parseFloat(getUsers.balance);
+        const currentBalance = parseFloat(getUsers[0].balance);
         const totalAmount = currentBalance + amount;
 
         if( currentBalance > maximumDeposit ) throw new BadRequestException("Anda tidak bisa menambah dana karena sudah mencapai batas maksimum");
         if( totalAmount > maximumDeposit ) throw new BadRequestException(`Anda tidak bisa menambah dana karena melebihi batas maksimum dana yang dimiliki.`);
 
-        await tx.users.update({
-            data: {
-                balance: totalAmount,
-            },
-            where: {
-                id: userId
-            }
-        });
+        await tx.$executeRaw`UPDATE users SET balance = ${totalAmount} WHERE id = ${userId}`;
 
         const getCurrentBalance = await tx.users.findUnique({
             select: {
@@ -88,30 +74,16 @@ TransactionsService.debit = async (request) => {
         if( amount == 0 ) throw new BadRequestException("Transaksi gagal. Silakan isi dana dengan benar");
         if( amount > 0 ) amount = amount * -1;
 
-        const getUsers = await tx.users.findUnique({
-            select: {
-                balance: true
-            },
-            where: {
-                id: userId
-            }
-        });
+        const getUsers = await tx.$queryRaw`SELECT id, balance FROM users WHERE id = ${userId} FOR UPDATE`;
 
-        if( getUsers === null ) throw new NotFoundException("Transaksi gagal. User tidak ditemukan");
+        if( getUsers.length === 0 ) throw new NotFoundException("Transaksi gagal. User tidak ditemukan");
         
-        const currentBalance = parseFloat(getUsers.balance);
+        const currentBalance = parseFloat(getUsers[0].balance);
         const totalAmount = currentBalance + amount;
 
         if( currentBalance == 0 || totalAmount < 0 ) throw new BadRequestException("Anda tidak memiliki cukup dana. Silakan isi ulang.");
 
-        await tx.users.update({
-            data: {
-                balance: totalAmount,
-            },
-            where: {
-                id: userId
-            }
-        });
+        await tx.$executeRaw`UPDATE users SET balance = ${totalAmount} WHERE id = ${userId}`;
 
         const getCurrentBalance = await tx.users.findUnique({
             select: {
