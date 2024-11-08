@@ -34,4 +34,6 @@ services:
     volumes:
       - ./app/.env:/home/node/app/.env
       - ./app/prisma:/home/node/app/prisma
+      - ./app/src:/home/node/app/src
+      - ./app/tests:/home/node/app/tests
   
