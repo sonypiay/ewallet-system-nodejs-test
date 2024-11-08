@@ -10,7 +10,7 @@ const maximumDeposit = 10000000;
 TransactionsService.credit = async (request) => {
     const storeRequest = TransactionRequest.storeRequest(request.body);
 
-    const [totalAmount, resultTransaction] = await ConnectionPrisma.$transaction(async (tx) => {
+    const [getCurrentBalance, resultTransaction] = await ConnectionPrisma.$transaction(async (tx) => {
         const userId = storeRequest.user_id;
         const amount = parseFloat(storeRequest.amount);
 
@@ -42,6 +42,15 @@ TransactionsService.credit = async (request) => {
             }
         });
 
+        const getCurrentBalance = await tx.users.findUnique({
+            select: {
+                balance: true
+            },
+            where: {
+                id: userId
+            }
+        });
+
         const resultTransaction = await tx.transactions.create({
             data: {
                 user_id: userId,
@@ -56,7 +65,7 @@ TransactionsService.credit = async (request) => {
             }
         });
 
-        return [totalAmount, resultTransaction];
+        return [getCurrentBalance, resultTransaction];
     });
 
     return {
@@ -64,7 +73,7 @@ TransactionsService.credit = async (request) => {
         response: {
             status: "success",
             transaction_id: resultTransaction.id,
-            new_balance: totalAmount,
+            new_balance: parseFloat(getCurrentBalance.balance),
         }
     };
 }
@@ -72,7 +81,7 @@ TransactionsService.credit = async (request) => {
 TransactionsService.debit = async (request) => {
     const storeRequest = TransactionRequest.storeRequest(request.body);
 
-    const [totalAmount, resultTransaction] = await ConnectionPrisma.$transaction(async (tx) => {
+    const [getCurrentBalance, resultTransaction] = await ConnectionPrisma.$transaction(async (tx) => {
         const userId = storeRequest.user_id;
         let amount = parseFloat(storeRequest.amount);
 
@@ -104,6 +113,15 @@ TransactionsService.debit = async (request) => {
             }
         });
 
+        const getCurrentBalance = await tx.users.findUnique({
+            select: {
+                balance: true
+            },
+            where: {
+                id: userId
+            }
+        });
+
         const resultTransaction = await tx.transactions.create({
             data: {
                 user_id: userId,
@@ -118,7 +136,7 @@ TransactionsService.debit = async (request) => {
             }
         });
 
-        return [totalAmount, resultTransaction];
+        return [getCurrentBalance, resultTransaction];
     });
 
     return {
@@ -126,7 +144,7 @@ TransactionsService.debit = async (request) => {
         response: {
             status: "success",
             transaction_id: resultTransaction.id,
-            new_balance: totalAmount,
+            new_balance: parseFloat(getCurrentBalance.balance),
         }
     };
 }
