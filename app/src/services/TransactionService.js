@@ -30,8 +30,8 @@ TransactionsService.credit = async (request) => {
         const currentBalance = parseFloat(getUsers.balance);
         const totalAmount = currentBalance + amount;
 
-        if( totalAmount > maximumDeposit ) throw new BadRequestException(`Anda tidak bisa menambah dana karena melebihi batas maksimum dana yang dimiliki.`);
         if( currentBalance > maximumDeposit ) throw new BadRequestException("Anda tidak bisa menambah dana karena sudah mencapai batas maksimum");
+        if( totalAmount > maximumDeposit ) throw new BadRequestException(`Anda tidak bisa menambah dana karena melebihi batas maksimum dana yang dimiliki.`);
 
         await tx.users.update({
             data: {
