@@ -22,18 +22,20 @@ export const ConnectionPrisma = new PrismaClient({
     ]
 });
 
-ConnectionPrisma.$on('query', (e) => {
-    Logger.info(e);
-})
-
-ConnectionPrisma.$on('info', (e) => {
-    Logger.info(e);
-})
-
-ConnectionPrisma.$on('error', (e) => {
-    Logger.error(e);
-})
-
-ConnectionPrisma.$on('warn', (e) => {
-    Logger.error(e);
-})
+if( process.env.NODE_ENV != 'production' ) {
+    ConnectionPrisma.$on('query', (e) => {
+        Logger.info(e);
+    })
+    
+    ConnectionPrisma.$on('info', (e) => {
+        Logger.info(e);
+    })
+    
+    ConnectionPrisma.$on('error', (e) => {
+        Logger.error(e);
+    })
+    
+    ConnectionPrisma.$on('warn', (e) => {
+        Logger.error(e);
+    })
+}
