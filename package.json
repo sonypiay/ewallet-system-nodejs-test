@@ -6,8 +6,7 @@
   "scripts": {
     "serve-dev": "nodemon src/main.js",
     "serve": "node src/main.js",
-    "test-dev": "jest -i",
-    "test": "jest"
+    "test": "jest -i"
   },
   "jest": {
     "transform": {
