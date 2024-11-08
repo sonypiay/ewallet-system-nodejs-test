@@ -8,7 +8,7 @@ WORKDIR /home/node/app
 USER node
 RUN npm install
 RUN npx prisma generate
-RUN rm -rf /home/node/app/app
+RUN rm -rf app
 COPY --chown=node:node . .
 
 EXPOSE 3000

@@ -23,7 +23,7 @@ model Transactions {
   amount     Decimal          @default(0) @db.Decimal(15, 2)
   type       TransactionsType @default(debit)
   created_at DateTime         @default(now())
-  users      Users            @relation(fields: [user_id], references: [id])
+  users      Users            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("transactions")
 }
