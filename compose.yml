@@ -1,25 +1,22 @@
 name: 'ewallet-system'
 
 volumes:
-  postgres-data:
+  mysql-nodejs:
     external: true
-  # mysql-data:
-  #   external: true
-      
+
 services:
-  postgres:
-    container_name: postgre-service
-    hostname: postgre-service
-    image: postgres:16
-    ports:
-      - 5432:5432
-    restart: always
+  db:
+    container_name: mysql-service
+    hostname: mysql-service
+    image: mysql:8
+    restart: unless-stopped
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mysql-nodejs:/var/lib/mysql/data
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=12345678
-      - POSTGRES_DB=ewallet_system
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD="1!2@3#4$5%6^"
+      - MYSQL_DATABASE=ewallet_system
   
   app:
     container_name: app-service
